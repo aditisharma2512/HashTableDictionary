@@ -103,3 +103,10 @@ class Dictionary:
                     print("Deleted word")
                 elif user_input == 5:
                     cont = False
+
+class Statistics:
+    def __init__(self):
+        pass
+
+    def load_statistics(self, hash_base: int, table_size: int, filename: str, max_time:int) -> tuple:
+        pass
