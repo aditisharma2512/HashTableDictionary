@@ -104,6 +104,7 @@ class Dictionary:
                 elif user_input == 5:
                     cont = False
 
+
 class Statistics:
     def __init__(self):
         pass
