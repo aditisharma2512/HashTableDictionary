@@ -107,7 +107,59 @@ class Dictionary:
 
 class Statistics:
     def __init__(self):
+        """
+        A constructor is not required for this class
+        """
         pass
 
-    def load_statistics(self, hash_base: int, table_size: int, filename: str, max_time:int) -> tuple:
-        pass
+    def load_statistics(self, hash_base: int, table_size: int, filename: str, max_time: int) -> tuple:
+        """
+        This method loads the statistics for a file from the LinearProbeHashTable
+        :param hash_base: Base of the hash table
+        :param table_size: Size of the hash table
+        :param filename: Filename to be read
+        :param max_time: Maximum time till TimeOut
+        :return: A tuple containing words, time, collision_count, probe_total, probe_max, rehash_count
+        @complexity: O(1) for this method
+        """
+        if hash_base < 0 or table_size < 0:
+            raise ValueError("Hash Base and Table Size must be >= 0")
+        dictionary = Dictionary(hash_base, table_size)
+        start_time = timeit.default_timer()
+        words = 0
+        try:
+            words = dictionary.load_dictionary(filename, max_time)
+        except TimeoutError:
+            words = len(dictionary.hash_table)
+            end_time = start_time + max_time
+        else:
+            end_time = timeit.default_timer()
+        collision_count, probe_total, probe_max, rehash_count = dictionary.hash_table.statistics()
+        time = end_time - start_time
+        return words, time, collision_count, probe_total, probe_max, rehash_count
+
+    def table_load_statistics(self, max_time) -> None:
+        """
+        This method writes a csv file with the description of the statistics while using the dictionary
+        :param max_time: Maximum time before timeout
+        :return: None
+        @complexity: O(m*n*p) where m = number of files, n = number of bases, p = number of table sizes
+        """
+        file = ['english_small.txt', 'english_large.txt', 'french.txt']
+        b = [1, 27183, 250726]
+        tablesize = [250727, 402221, 1000081]
+
+        with open('output_task2.csv', mode='w+', encoding='utf-8') as fn:
+            fn.write('file,table size,b,words,time,collision_count,probe_total,probe_max,rehash_count\n')
+            for f in file:
+                for hb in b:
+                    for size in tablesize:
+                        words, time, collision_count, probe_total, probe_max, rehash_count = \
+                            self.load_statistics(hb, size, f, max_time)
+                        fn.write(str(f)+","+str(size)+","+str(hb)+","+str(words)+","+str(time)+","+str(collision_count)
+                                 + ","+str(probe_total)+","+str(probe_max)+","+str(rehash_count)+"\n")
+
+
+if __name__ == '__main__':
+    s = Statistics()
+    s.table_load_statistics(10)

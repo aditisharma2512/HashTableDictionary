@@ -49,6 +49,10 @@ class LinearProbeHashTable(Generic[T]):
         self.table = ArrayR(max(self.MIN_CAPACITY, table_size))
         self.hash_base = hash_base
         self.next_prime = 0
+        self.collision_count = 0
+        self.probe_total = 0
+        self.probe_max = 0
+        self.rehash_count = 0
 
         while LinearProbeHashTable.PRIMES[self.next_prime] <= table_size:
             self.next_prime += 1
@@ -202,6 +206,9 @@ class LinearProbeHashTable(Generic[T]):
                 (key, value) = item
                 result += "(" + str(key) + "," + str(value) + ")\n"
         return result
+
+    def statistics(self) -> tuple:
+        return self.collision_count, self.probe_total, self.probe_max, self.rehash_count
 
 
 class TestLinearProbeHashTable(unittest.TestCase):
