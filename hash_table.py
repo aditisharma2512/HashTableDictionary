@@ -100,6 +100,7 @@ class LinearProbeHashTable(Generic[T]):
 
         self.count = new_hash.count
         self.table = new_hash.table
+        self.rehash_count += 1
 
     def __linear_probe(self, key: str, is_insert: bool) -> int:
         """
@@ -115,7 +116,16 @@ class LinearProbeHashTable(Generic[T]):
         if is_insert and self.is_full():
             raise KeyError(key)
 
+        if self.table[position] is not None and self.table[position][0] != key:
+            self.collision_count += 1
+
+        probes = 0
         for _ in range(len(self.table)):  # start traversing
+            if self.table[position] is None or self.table[position][0] == key:
+                self.probe_total += probes
+                if probes > self.probe_max:
+                    self.probe_max = probes
+
             if self.table[position] is None:  # found empty slot
                 if is_insert:
                     return position
@@ -125,6 +135,7 @@ class LinearProbeHashTable(Generic[T]):
                 return position
             else:  # there is something but not the key, try next
                 position = (position + 1) % len(self.table)
+                probes += 1
 
         raise KeyError(key)
 

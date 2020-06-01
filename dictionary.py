@@ -161,5 +161,5 @@ class Statistics:
 
 
 if __name__ == '__main__':
-    s = Statistics()
-    s.table_load_statistics(10)
+    d =Dictionary(1234,123456)
+    d.menu()
