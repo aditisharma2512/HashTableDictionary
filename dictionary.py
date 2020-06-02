@@ -3,7 +3,7 @@ import timeit
 
 
 class Dictionary:
-    def __init__(self, hash_base: int, table_size: int) -> None:
+    def __init__(self, hash_base: int = LinearProbeHashTable.DEFAULT_HASH_BASE, table_size: int = LinearProbeHashTable.DEFAULT_TABLE_SIZE) -> None:
         """
         Constructs a Hash Table with given parameters
         :param hash_base: contains the base of the hash table
